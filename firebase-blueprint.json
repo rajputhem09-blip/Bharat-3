@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with display name, username handle, avatar, phone, and locale",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "handle": { "type": "string", "maxLength": 50, "pattern": "^[a-zA-Z0-9_]+$" },
+        "phone": { "type": "string", "maxLength": 20 },
+        "avatar": { "type": "string" },
+        "bio": { "type": "string", "maxLength": 300 },
+        "statusQuote": { "type": "string", "maxLength": 150 },
+        "isOnline": { "type": "boolean" },
+        "isVerified": { "type": "boolean" },
+        "upiId": { "type": "string", "maxLength": 50 },
+        "locale": { "type": "string", "maxLength": 10 }
+      },
+      "required": ["id", "name", "handle"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Direct conversations, channels, and group messaging records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["direct", "group", "channel", "ai_bot"] },
+        "name": { "type": "string", "maxLength": 100 },
+        "avatar": { "type": "string" },
+        "description": { "type": "string", "maxLength": 500 },
+        "topic": { "type": "string", "maxLength": 200 },
+        "createdBy": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "adminIds": { "type": "array" },
+        "moderatorIds": { "type": "array" },
+        "memberIds": { "type": "array" },
+        "bannedUserIds": { "type": "array" },
+        "mutedUserIds": { "type": "array" },
+        "inviteCode": { "type": "string", "maxLength": 64 },
+        "isInviteLinkRevoked": { "type": "boolean" },
+        "lastMessage": { "type": "string", "maxLength": 1000 },
+        "lastMessageTime": { "type": "string" },
+        "lastMessageRaw": { "type": "number" },
+        "pinnedMessageId": { "type": "string" }
+      },
+      "required": ["type", "memberIds", "createdBy"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Rich chat message within a conversation",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "senderAvatar": { "type": "string" },
+        "text": { "type": "string", "maxLength": 5000 },
+        "timestamp": { "type": "string" },
+        "timeRaw": { "type": "number" },
+        "status": { "type": "string", "enum": ["sending", "sent", "delivered", "read"] },
+        "isStarred": { "type": "boolean" },
+        "isPinned": { "type": "boolean" },
+        "isDeleted": { "type": "boolean" },
+        "isEdited": { "type": "boolean" }
+      },
+      "required": ["chatId", "senderId", "timeRaw"]
+    },
+    "ChannelPost": {
+      "title": "ChannelPost",
+      "description": "Broadcast post published in a channel feed with attachments, reactions and view telemetry",
+      "type": "object",
+      "properties": {
+        "channelId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "body": { "type": "string", "maxLength": 10000 },
+        "mediaUrl": { "type": "string" },
+        "mediaType": { "type": "string", "enum": ["image", "video", "document", "audio", "none"] },
+        "mediaName": { "type": "string", "maxLength": 150 },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorAvatar": { "type": "string" },
+        "viewsCount": { "type": "number" },
+        "forwardsCount": { "type": "number" },
+        "commentsCount": { "type": "number" },
+        "isPinned": { "type": "boolean" },
+        "isDeleted": { "type": "boolean" },
+        "isLiveSoon": { "type": "boolean" },
+        "liveStreamUrl": { "type": "string" }
+      },
+      "required": ["channelId", "body", "authorId"]
+    },
+    "ChannelComment": {
+      "title": "ChannelComment",
+      "description": "Discussion replies under a broadcast post",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "channelId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userAvatar": { "type": "string" },
+        "text": { "type": "string", "maxLength": 2000 },
+        "likesCount": { "type": "number" }
+      },
+      "required": ["postId", "channelId", "userId", "text"]
+    },
+    "CallSession": {
+      "title": "CallSession",
+      "description": "WebRTC 1-to-1 Voice and Video Call signaling session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "callerId": { "type": "string" },
+        "callerName": { "type": "string", "maxLength": 100 },
+        "callerAvatar": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "receiverName": { "type": "string", "maxLength": 100 },
+        "receiverAvatar": { "type": "string" },
+        "type": { "type": "string", "enum": ["voice", "video"] },
+        "status": { "type": "string", "enum": ["offering", "ringing", "connected", "ended", "declined", "busy", "missed"] },
+        "offer": { "type": "object" },
+        "answer": { "type": "object" },
+        "createdAt": { "type": "number" },
+        "connectedAt": { "type": "number" },
+        "endedAt": { "type": "number" },
+        "durationSec": { "type": "number" }
+      },
+      "required": ["callerId", "receiverId", "type", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile directory"
+    },
+    "/usernames/{username}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Unique username registry"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Direct, group, and channel chat rooms with RBAC and permissions"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Real-time messages belonging to a chat"
+    },
+    "/chats/{chatId}/posts/{postId}": {
+      "schema": "ChannelPost",
+      "description": "Broadcast posts for channel subscribers"
+    },
+    "/chats/{chatId}/posts/{postId}/comments/{commentId}": {
+      "schema": "ChannelComment",
+      "description": "Discussion replies under a broadcast post"
+    },
+    "/calls/{callId}": {
+      "schema": "CallSession",
+      "description": "Real-time WebRTC 1-to-1 call signaling session and state"
+    }
+  }
+}

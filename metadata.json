@@ -1,0 +1,11 @@
+{
+  "name": "Remix BharatChat - Modern Messaging App \u0026 Design System",
+  "description": "A comprehensive 40-screen frontend application for BharatChat with original UI, real-time messaging flows, Bharat AI, UPI payments, live streams, voice/video calls, and design system.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
